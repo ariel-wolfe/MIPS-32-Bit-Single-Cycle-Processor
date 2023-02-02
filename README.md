@@ -104,3 +104,9 @@ end behavior;
 
 Figure 5. VHDL and Timing Simulation for Sign Extender. 
 
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use
+```
