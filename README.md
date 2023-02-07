@@ -176,5 +176,5 @@ case(OPCODE) IS
   WHEN OTHERS => OUTPUT <= "1000";
   END CASE;
   END PROCESS;
-END BEHAVIOR;
+END behavior;
 ```
