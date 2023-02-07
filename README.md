@@ -108,5 +108,73 @@ Figure 5. VHDL and Timing Simulation for Sign Extender.
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use
+use IEEE.NUMERIC_STD.ALL;
+
+entity REGFILE IS
+  port(
+       clock : IN STD_LOGIC_VECTOR (4 DOWNTO 0);
+       read_reg1 : IN STD_LOGIC_VECTOR (4 DOWNTO 0);
+       read_reg2 : IN STD_LOGIC_VECTOR (4 DOWNTO 0);
+       write_reg : IN STD_LOGIC_VECTOR (4 DOWNTO 0);
+       write_data : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+       reg_write : IN STD_LOGIC;
+       read_data1 : OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
+       read_data2 : OUT STD_LOGIC_VECTOR (31 DOWNTO 0));
+end REGFILE;
+
+architecture behavior of REGFILE IS
+TYPE reg_file_type IS array(0 to 3) OF STD_LOGIC_VECTOR (31 DOWNTO 0);
+signal array_reg : reg_file_type := (X"00000000",
+                                     X"11111111",
+                                     X"22222222",
+                                     X"33333333");
+begin
+process(clock, reg_write) THEN 
+begin
+  if RISING_EDGE(clock) THEN
+    if (reg_write = '1') THEN
+      array_reg (TO_INTEGER(UNSIGNED(write_reg))) <= write_data;
+    end if;
+  end if;
+end process;
+
+read_data1 <= array_reg (TO_INTEGER(UNSIGNED(read_reg1)));
+read_data2 <= array_reg (TO_INTEGER(UNSIGNED(read_reg2)));
+
+end behavior;
+```
+![image](https://user-images.githubusercontent.com/124304251/217319140-12a5187c-da3a-421a-bfaf-45cca7b157f5.png)
+
+Figure 6. VHDL and Timing Simulation of Register File.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity ALU_CONTROL IS
+port(INPUT : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+     OPCODE : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+     OUTPUT : OUT STD_LOGIC_VECTOR(3 DOWNTO 0));
+end ALU_CONTROL;
+
+architecture behavior of ALU_CONTROL IS
+begin
+process(OPCODE, INPUT)
+begin
+case(OPCODE) IS
+  WHEN "00" => OUTPUT <= "1000"; --ADD COMMAND
+  WHEN "01" => OUTPUT <= "0110"; --SUB COMMAND
+  WHEN "10" => CASE (INPUT) IS --R TYPE COMMANDS
+               WHEN "100000" => OUTPUT <= "1000";
+               WHEN "100010" => OUTPUT <= "0110";
+               WHEN "100100" => OUTPUT <= "0010";
+               WHEN "100101" => OUTPUT <= "0100";
+               WHEN "101010" => OUTPUT <= "1001";
+               WHEN OTHERS => OUTPUT <= "0000";
+               END CASE;
+  WHEN OTHERS => OUTPUT <= "1000";
+  END CASE;
+  END PROCESS;
+END BEHAVIOR;
 ```
