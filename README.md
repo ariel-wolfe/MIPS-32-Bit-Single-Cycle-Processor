@@ -178,3 +178,72 @@ case(OPCODE) IS
   END PROCESS;
 END behavior;
 ```
+![image](https://user-images.githubusercontent.com/124304251/217355229-1da8449e-21f2-4157-aa4c-42357362d062.png)
+![image](https://user-images.githubusercontent.com/124304251/217355253-eeb560f3-8fa1-463e-8b23-c36da5fe1306.png)
+![image](https://user-images.githubusercontent.com/124304251/217355281-120ef7d9-ddec-4907-9fa9-a1dc1f611982.png)
+![image](https://user-images.githubusercontent.com/124304251/217355299-53b04d7c-0cc1-4739-a54f-8f7a6db3109e.png)
+
+Figure 7. VHDL and Timing Simulation of ALU Control Unit.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity IM IS
+port(CLOCK : IN STD_LOGIC;
+     READADD : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     INSTOUT : OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
+end IM;
+
+architecture behavioral of IM IS
+type RAM_IM IS ARRAY(0 TO 3) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
+SIGNAL InstMem : RAM_IM := (X"01285024", --AND t2, t1, t0
+                            X"018B6825", --OR t%, t4, t3
+                            X"01285020", --AND t2, t1, t0
+                            X"2108000A"); --addi t0, t0, l0
+begin
+process(CLOCK)
+begin
+if RISING_EDGE(CLOCK) THEN
+  INSTOUT <= INSTMEM((TO_INTEGER(UNSIGNED(READADD))));
+end if;
+end process;
+end behavioral;
+```
+![image](https://user-images.githubusercontent.com/124304251/217357003-ab89fa1f-b182-4c2b-96eb-8cc520a3e97b.png)
+
+Figure 8. VHDL and Timing Simulation for Instruction Memory.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity PC IS
+port(CLOCK : IN STD_LOGIC;
+     PCADD : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     IMADD : OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
+end PC;
+
+architecture behavioral of PC IS
+signal X : STD_LOGIC := '0';
+begin
+process(CLOCK, PCADD, X)
+begin
+if RISING_EDGE(CLOCK) THEN
+  if X = '0' THEN
+    IMADD <= X"00000000";
+    X <= '1';
+    ELSEIF (X = '1') THEN
+      IMADD <= PCADD;
+    END IF;
+end if;
+end process;
+end behavioral;
+```
+![image](https://user-images.githubusercontent.com/124304251/217358058-dd3d975d-3fea-423f-890d-b4bad3b31a53.png)
+
+Figure 9. VHDL and Timing Simulation for PC.
