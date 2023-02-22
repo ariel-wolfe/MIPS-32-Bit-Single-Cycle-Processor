@@ -363,3 +363,133 @@ process (A, B, OPCODE) IS
 end process;
 end behavior;
 ```
+![image](https://user-images.githubusercontent.com/124304251/220741536-2c342602-2b50-45a1-a8ef-1d77105fad64.png)
+![image](https://user-images.githubusercontent.com/124304251/220741565-62887510-1027-4838-b071-018815e069ef.png)
+![image](https://user-images.githubusercontent.com/124304251/220741585-10ccf464-11d8-44b7-a8fd-9e2541244356.png)
+
+Figure 11. VHDL and Timing Simulation of ALU.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity Main_Control IS
+port( OPCODE : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+	  REGDEST : OUT STD_LOGIC;
+	  MEMREAD : OUT STD_LOGIC;
+	  MEMWRITE : OUT STD_LOGIC;
+	  MEMTOREG : OUT STD_LOGIC;
+	  ALUOP : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+	  ALUSRC : OUT STD_LOGIC;
+	  BRANCH : OUT STD_LOGIC;
+	  REGWRITE : OUT STD_LOGIC);
+end Main_Control;
+
+architecture behavioral of Main_Control IS
+begin
+process(OPCODE)
+begin
+REGWRITE <= '0';
+case OPCODE IS
+WHEN "000000" =>		-- ALL R-TYPE
+	REGDEST <= '0';
+	MEMREAD <= '0';
+	MEMWRITE <= '0';
+	MEMTOREG <= '0';
+	ALUOP <= "10";
+	ALUSRC <= '0';
+	REGWRITE <= '1' AFTER 10ns;
+	BRANCH <= '0';
+	
+WHEN "100011" =>		-- FOR LW INTRUCTIONS
+	REGDEST <= '0';
+	MEMREAD <= '1';
+	MEMWRITE <= '0';
+	MEMTOREG <= '1';
+	ALUOP <= "00";
+	ALUSRC <= '1';
+	REGWRITE <= '1' AFTER 10ns;
+	BRANCH <= '0';
+	
+WHEN "101011" =>		--FOR SW INSTRUCTIONS
+	REGDEST <= '1';
+	MEMREAD <= '0';
+	MEMWRITE <= '1';
+	MEMTOREG <= '0';
+	ALUOP <= "00";
+	ALUSRC <= '1';
+	REGWRITE <= '0' AFTER 10ns;
+	BRANCH <= '0';
+	
+WHEN "000100" =>		--FOR BEQ INSTRUCTIONS
+	REGDEST <= '0';
+	MEMREAD <= '0';
+	MEMWRITE <= '0';
+	MEMTOREG <= '0';
+	ALUOP <= "10";
+	ALUSRC <= '0';
+	REGWRITE <= '0' AFTER 10ns;
+	BRANCH <= '1';
+	
+WHEN OTHERS => NULL;
+	REGDEST <= '0';
+	MEMREAD <= '0';
+	MEMWRITE <= '0';
+	MEMTOREG <= '0';
+	ALUOP <= "00";
+	ALUSRC <= '0';
+	REGWRITE <= '0';
+	BRANCH <= '0';
+	
+END CASE;
+END PROCESS;
+END BEHAVIORAL;
+```
+![image](https://user-images.githubusercontent.com/124304251/220741783-7d27e3b1-5e67-46d3-8c80-733cab35251f.png)
+![image](https://user-images.githubusercontent.com/124304251/220741804-2674fb0f-9bb9-4671-9935-aa816b8b466b.png)
+![image](https://user-images.githubusercontent.com/124304251/220741837-abbdc91d-48f4-4344-ad9e-ee46dfcca546.png)
+![image](https://user-images.githubusercontent.com/124304251/220741876-ed07a7d4-5377-4952-9fe0-e084ecb62195.png)
+![image](https://user-images.githubusercontent.com/124304251/220741961-c1c0be2d-aa65-4d77-b65a-c40b56bdeecf.png)
+
+Figure 12. VHDL and Timing Simulation for Main Control Unit.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity adder IS
+port(A, B : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     R : OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
+end adder;
+
+architecture behavior of adder IS
+begin
+  R <= A + B;
+end behavior;
+```
+![image](https://user-images.githubusercontent.com/124304251/220742670-2ffa1e97-6b29-4864-b0a6-1592d27adab1.png)
+![image](https://user-images.githubusercontent.com/124304251/220742696-772e2c88-f487-4c94-8709-857eb8bb38a1.png)
+
+Figure 13. VHDL and Timing Simulation for Adder.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity add4 IS
+port(A : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     R : OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
+end add4;
+
+architecture add4 IS
+begin
+	R <= A + "X0100";
+end behavior;
+```
+![image](https://user-images.githubusercontent.com/124304251/220743413-ae98ea46-113e-44d9-82c1-8bf2472d7113.png)
+![image](https://user-images.githubusercontent.com/124304251/220743477-124917c1-c517-4eba-814a-1be1c7eb25be.png)
+
+Figure 14. VHDL and Timing Simulation for Add4.
