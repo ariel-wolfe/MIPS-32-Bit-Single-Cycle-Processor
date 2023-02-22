@@ -444,7 +444,7 @@ WHEN OTHERS => NULL;
 	
 END CASE;
 END PROCESS;
-END BEHAVIORAL;
+end behavioral;
 ```
 ![image](https://user-images.githubusercontent.com/124304251/220741783-7d27e3b1-5e67-46d3-8c80-733cab35251f.png)
 ![image](https://user-images.githubusercontent.com/124304251/220741804-2674fb0f-9bb9-4671-9935-aa816b8b466b.png)
@@ -493,3 +493,16 @@ end behavior;
 ![image](https://user-images.githubusercontent.com/124304251/220743477-124917c1-c517-4eba-814a-1be1c7eb25be.png)
 
 Figure 14. VHDL and Timing Simulation for Add4.
+
+![image](https://user-images.githubusercontent.com/124304251/220743915-c319704e-03fb-4d64-a623-0b68c3a2eb71.png)
+
+Figure 15. Assembled 32-bit MIPS Single Cycle Processor.
+
+## Discusion
+The timing simulations for all the components for the 32-bit MIPS single cycle processor was verified to be operating correctly and producing the expected output. The assembled circuit for the processor was compiled successfully and was verified to be operating correctly. 
+
+## Conclusion
+The project was overall successful. The components of the processor worked individually and together with the assembled processor circuit. This was the result of the course goal of learning computer architecture and analyzing/designing simple computers.
+
+## References
+None.
