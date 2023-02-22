@@ -247,3 +247,119 @@ end behavioral;
 ![image](https://user-images.githubusercontent.com/124304251/217358058-dd3d975d-3fea-423f-890d-b4bad3b31a53.png)
 
 Figure 9. VHDL and Timing Simulation for PC.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity DM IS
+port(clock : IN STD_LOGIC;
+     address : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     write_data : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+     mem_read : IN STD_LOGIC;
+     mem_write : IN STD_LOGIC;
+     read_data : OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
+end DM;
+
+architecture behavioral of DM IS
+type RAM_DM IS array(0 to 4 -1) of STD_LOGIC_VECTOR(31 DOWNTO 0);
+signal DM : RAM_DM := (X"00000000",
+                       X"00000001",
+                       X"00000005"
+                       X"00000000");
+begin
+process(mem_write, mem_read, clock)
+begin
+if RISING_EDGE(clock) THEN
+  if(mem_write = '1') THEN
+    DM((TO_INTEGER(UNSIGNED(address)))) <= write_data;
+  end if;
+end if;
+end process;
+end behavioral;
+```
+![image](https://user-images.githubusercontent.com/124304251/220734997-eb30df00-2cb5-4f87-82bf-66d797a4b5ef.png)
+
+Figure 10. VHDL and Timing Simulation for Data Memory.
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity ALU IS
+Port(A, B : in STD_LOGIC_VECTOR (31 downto 0);
+	OPCODE : in STD_LOGIC_VECTOR (3 downto 0);
+	R : out STD_LOGIC_VECTOR (31 downto 0));
+Zero : out stdlogic
+	end ALU;
+	
+architecture behavior of ALU IS
+
+begin
+	
+process (A, B, OPCODE) IS
+	begin
+	case OPCODE IS
+	-- Logical Operations
+	when "0000" =>
+	R <= NOT(A);
+	
+	when "0001" =>
+	R <= NOT(B);
+	
+	when "0010" =>
+	R <= A AND B;
+	
+	when "0011" =>
+	R <= A NAND B;
+	
+	when "0100" =>
+	R <= A OR B;
+	
+	when "0101" =>
+	R <= A NOR B;
+	
+	when "0110" =>
+	R <= A XOR B;
+	
+	when "0111" =>
+	R <= A XNOR B;
+	
+	-- Arithmetic Operations
+	when "1000" =>
+	R <= A + B;
+	
+	when "1001" => 
+	if A < B then
+	R <= "00000000000000000000000000000001";
+	else
+	R <= "00000000000000000000000000000000";
+	end if;
+	
+	when "1010" =>
+	R <= A + "00000000000000000000000000000001";
+	
+	when "1011" =>
+	R <= A - "00000000000000000000000000000001";
+	
+	when "1100" =>
+	R <= B + "00000000000000000000000000000001";
+	
+	when "1101" =>
+	R <= B - "00000000000000000000000000000001";
+	
+	when "1110" =>
+	R <= NOT(A) + "00000000000000000000000000000001";
+	
+	when "1111" =>
+	R <= NOT(B) + "00000000000000000000000000000001";
+
+
+	
+	end case;
+end process;
+end behavior;
+```
